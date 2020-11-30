@@ -5,19 +5,19 @@ const path = require("path");
 const fs = require("fs");
 const app = express();
 //Express Set up
-var PORT = 8080;
+var PORT = 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/notes", function (req, res) {
-  console.log(`${req.method}: ${req.path} : ${JSON.stringify(rerq.params)}`);
-  res.sendFile(path.join(__dirname, "notes.html"));
+  console.log(`${req.method}: ${req.path} : ${JSON.stringify(req.params)}`);
+  res.sendFile(path.join(__dirname, "public/notes.html"));
 });
 
-app.get("/*", function (req, res) {
-  console.log(`${req.method}: ${req.path} : ${JSON.stringify(rerq.params)}`);
-  res.sendFile(path.join(__dirname, "index.html"));
+app.get("/", function (req, res) {
+  console.log(`${req.method}: ${req.path} : ${JSON.stringify(req.params)}`);
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 app.listen(PORT, function () {
