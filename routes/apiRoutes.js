@@ -1,4 +1,4 @@
-const noteData = require("../db/db.json");
+//const noteData = require("./db/db.json");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 
@@ -18,30 +18,34 @@ module.exports = function (app) {
       title: req.body.title,
       text: req.body.text,
     };
-    console.log(newNote);
+
     fs.readFile("./db/db.json", function (err, data) {
       if (err) throw error;
       const savedNotes = JSON.parse(data);
-      console.log(savedNotes);
       savedNotes.push(newNote);
-      console.log(savedNotes);
+
       fs.writeFile("./db/db.json", JSON.stringify(savedNotes), (err) => {
         if (err) throw err;
         console.log("note noted!");
-        return res.json(noteData);
+        return res.json(savedNotes);
       });
     });
 
     app.delete("/api/notes", function (req, res) {
-      fs.readFile("./db/db.json", function (err, data) {
+      const deadNote = req.params.id;
+      console.log(deadNote);
+      fs.readFile("./db/db.json", function (err) {
         if (err) throw error;
-        const upDatedArray = noteData.filter(
-          (item) => item.id != req.params.id
-        );
-        console.log(upDatedArray);
-        fs.writeFile("./db/db.json", JSON.stringify(upDatedArray), function () {
-          console.log(`${item} has been deleted`);
-          return res.json(upDatedArray);
+
+        for (let i = 0; i < savedNotes.length; i++) {
+          if (savedNotes[i].id === deadNote) {
+            savedNotes.splice([i], 1);
+          }
+        }
+        console.log(savedNotes);
+
+        fs.writeFile("./db/db.json", JSON.stringify(savedNotes), (err) => {
+          if (err) throw err;
         });
       });
     });
