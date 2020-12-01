@@ -1,9 +1,9 @@
 const noteData = require("../db/db.json");
-const uuid = require("uuid/v4");
+const { uuid } = require("uuidv4");
 
 module.exports = function (app) {
   app.get("api/notes", function (req, res) {
-    fs.readFile("../db/db.json", (err, data) => {
+    fs.readFile("./db/db.json", (err, data) => {
       if (err) throw err;
       const savedNotes = JSON.parse(data);
       console.log(savedNotes);
