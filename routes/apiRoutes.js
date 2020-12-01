@@ -1,5 +1,6 @@
 const noteData = require("../db/db.json");
-const { uuid } = require("uuidv4");
+const { v4: uuidv4 } = require("uuid");
+const fs = require("fs");
 
 module.exports = function (app) {
   app.get("api/notes", function (req, res) {
@@ -12,27 +13,36 @@ module.exports = function (app) {
   });
 
   app.post("/api/notes", function (req, res) {
-    let noteData = JSON.parse(data);
-    let newNote = {
-      id: uuid,
+    const newNote = {
+      id: uuidv4(),
       title: req.body.title,
       text: req.body.text,
     };
-    noteData.push(newNote);
-    fs.writeFile("../db/db.json", JSON.stringify(noteData), (err) => {
-      if (err) throw err;
-      return res.json(noteData);
-    });
-  });
-
-  app.delete("./api/notes", function (req, res) {
+    console.log(newNote);
     fs.readFile("./db/db.json", function (err, data) {
       if (err) throw error;
-      const upDatedArray = noteData.filter((item) => item.id != req.params.id);
-      console.log(upDatedArray);
-      fs.writeFile("./db/db.json", JSON.stringify(upDatedArray), function () {
-        console.log(`${item} has been deleted`);
-        return res.json(upDatedArray);
+      const savedNotes = JSON.parse(data);
+      console.log(savedNotes);
+      savedNotes.push(newNote);
+      console.log(savedNotes);
+      fs.writeFile("./db/db.json", JSON.stringify(savedNotes), (err) => {
+        if (err) throw err;
+        console.log("note noted!");
+        return res.json(noteData);
+      });
+    });
+
+    app.delete("/api/notes", function (req, res) {
+      fs.readFile("./db/db.json", function (err, data) {
+        if (err) throw error;
+        const upDatedArray = noteData.filter(
+          (item) => item.id != req.params.id
+        );
+        console.log(upDatedArray);
+        fs.writeFile("./db/db.json", JSON.stringify(upDatedArray), function () {
+          console.log(`${item} has been deleted`);
+          return res.json(upDatedArray);
+        });
       });
     });
   });
