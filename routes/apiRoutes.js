@@ -1,10 +1,9 @@
 //const noteData = require("./db/db.json");
 const { v4: uuidv4 } = require("uuid");
-const file = require("file-system");
 const fs = require("fs");
 
 module.exports = function (app) {
-  app.get("api/notes", function (req, res) {
+  app.get("/api/notes", function (req, res) {
     fs.readFile("./db/db.json", (err, data) => {
       if (err) throw err;
       const savedNotes = JSON.parse(data);
@@ -32,7 +31,7 @@ module.exports = function (app) {
       });
     });
 
-    app.delete("/api/notes", function (req, res) {
+    app.delete("/api/notes/:id", function (req, res) {
       const deadNote = req.params.id;
       console.log(deadNote);
       fs.readFile("./db/db.json", function (err) {
